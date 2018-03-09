@@ -5,7 +5,7 @@
 #include "UnityShaderVariables.cginc"
 #include "UnityInstancing.cginc"
 #include "UnityStandardConfig.cginc"
-#include "UnityStandardInput.cginc"
+#include "Assets/builtin_shaders-5.4.1f1/CGIncludes/UnityStandardInput.cginc"
 #include "UnityPBSLighting.cginc"
 #include "UnityStandardUtils.cginc"
 #include "UnityStandardBRDF.cginc"
@@ -428,7 +428,9 @@ half4 fragForwardBaseInternal (VertexOutputForwardBase i)
 
 	half4 c = UNITY_BRDF_PBS (s.diffColor, s.specColor, s.oneMinusReflectivity, s.oneMinusRoughness, s.normalWorld, -s.eyeVec, gi.light, gi.indirect);
 	c.rgb += UNITY_BRDF_GI (s.diffColor, s.specColor, s.oneMinusReflectivity, s.oneMinusRoughness, s.normalWorld, -s.eyeVec, occlusion, gi);
-	c.rgb += Emission(i.tex.xy);
+	
+	fixed3 viewDir = normalize(_WorldSpaceCameraPos.xyz - s.posWorld.xyz);
+	c.rgb +=  Emission(i.tex.xy) * Emission_rim(viewDir, s.normalWorld);
 
 	UNITY_APPLY_FOG(i.fogCoord, c.rgb);
 	return OutputForward (c, s.alpha);

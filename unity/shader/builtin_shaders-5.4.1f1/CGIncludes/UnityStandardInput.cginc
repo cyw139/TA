@@ -51,6 +51,9 @@ half		_UVSec;
 half4 		_EmissionColor;
 sampler2D	_EmissionMap;
 
+half       _EmissionRimRange;
+half       _EmissionRimPower;
+
 //-------------------------------------------------------------------------------------
 // Input functions
 
@@ -179,6 +182,16 @@ half3 Emission(float2 uv)
 	return 0;
 #else
 	return tex2D(_EmissionMap, uv).rgb * _EmissionColor.rgb;
+#endif
+}
+
+half3 Emission_rim(fixed3 viewDir, fixed3 worldNormal)
+{
+#ifndef _EMISSION
+    return 0;
+#else
+    half rim = 1.0 - saturate(dot (normalize(viewDir), worldNormal));
+    return _EmissionColor.rgb * pow (rim, exp2(_EmissionRimRange)) * _EmissionRimPower;
 #endif
 }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UnityEditor
 {
-internal class StandardShaderGUI : ShaderGUI
+internal class StandardShaderGUI1 : ShaderGUI
 {
 	private enum WorkflowMode
 	{
@@ -46,6 +46,7 @@ internal class StandardShaderGUI : ShaderGUI
 		public static GUIContent heightMapText = new GUIContent("Height Map", "Height Map (G)");
 		public static GUIContent occlusionText = new GUIContent("Occlusion", "Occlusion (G)");
 		public static GUIContent emissionText = new GUIContent("Emission", "Emission (RGB)");
+		public static GUIContent emissionRimText = new GUIContent("RimPower", "Emission (RGB)");
 		public static GUIContent detailMaskText = new GUIContent("Detail Mask", "Mask for Secondary Maps (A)");
 		public static GUIContent detailAlbedoText = new GUIContent("Detail Albedo x2", "Albedo (RGB) multiplied by 2");
 		public static GUIContent detailNormalMapText = new GUIContent("Normal Map", "Normal Map");
@@ -81,6 +82,8 @@ internal class StandardShaderGUI : ShaderGUI
 	MaterialProperty heightMap = null;
 	MaterialProperty emissionColorForRendering = null;
 	MaterialProperty emissionMap = null;
+	MaterialProperty emissionRimRange = null;
+	MaterialProperty emissionRimPower = null;
 	MaterialProperty detailMask = null;
 	MaterialProperty detailAlbedoMap = null;
 	MaterialProperty detailNormalMapScale = null;
@@ -122,6 +125,8 @@ internal class StandardShaderGUI : ShaderGUI
 		occlusionMap = FindProperty ("_OcclusionMap", props);
 		emissionColorForRendering = FindProperty ("_EmissionColor", props);
 		emissionMap = FindProperty ("_EmissionMap", props);
+		emissionRimRange = FindProperty("_EmissionRimRange", props);
+		emissionRimPower = FindProperty("_EmissionRimPower", props);
 		detailMask = FindProperty ("_DetailMask", props);
 		detailAlbedoMap = FindProperty ("_DetailAlbedoMap", props);
 		detailNormalMapScale = FindProperty ("_DetailNormalMapScale", props);
@@ -165,6 +170,8 @@ internal class StandardShaderGUI : ShaderGUI
 			m_MaterialEditor.TexturePropertySingleLine(Styles.heightMapText, heightMap, heightMap.textureValue != null ? heigtMapScale : null);
 			m_MaterialEditor.TexturePropertySingleLine(Styles.occlusionText, occlusionMap, occlusionMap.textureValue != null ? occlusionStrength : null);
 			DoEmissionArea(material);
+			m_MaterialEditor.RangeProperty(emissionRimPower, "RimPower");
+			m_MaterialEditor.RangeProperty(emissionRimRange, "RimRange");
 			m_MaterialEditor.TexturePropertySingleLine(Styles.detailMaskText, detailMask);
 			EditorGUI.BeginChangeCheck();
 			m_MaterialEditor.TextureScaleOffsetProperty(albedoMap);
@@ -285,6 +292,7 @@ internal class StandardShaderGUI : ShaderGUI
 		{
 			EditorGUILayout.HelpBox(Styles.emissiveWarning.text, MessageType.Warning);
 		}
+		
 	}
 
 	void DoSpecularMetallicArea()

@@ -1,4 +1,4 @@
-Shader "Standard (Specular setup)"
+Shader "Standard (Specular setup)_new"
 {
 	Properties
 	{
@@ -28,6 +28,9 @@ Shader "Standard (Specular setup)"
 		_EmissionColor("Color", Color) = (0,0,0)
 		_EmissionMap("Emission", 2D) = "white" {}
 		
+		_EmissionRimRange("RimRange", Range(5,0.01)) = 1
+		_EmissionRimPower("RimPower", Range(0.01,10)) = 2
+		
 		_DetailMask("Detail Mask", 2D) = "white" {}
 
 		_DetailAlbedoMap("Detail Albedo x2", 2D) = "grey" {}
@@ -45,7 +48,7 @@ Shader "Standard (Specular setup)"
 	}
 
 	CGINCLUDE
-		#define UNITY_SETUP_BRDF_INPUT SpecularSetup
+		#define UNITY_SETUP_BRDF_INPUT SpecularSetup    
 	ENDCG
 
 	SubShader
@@ -65,7 +68,7 @@ Shader "Standard (Specular setup)"
 			ZWrite [_ZWrite]
 
 			CGPROGRAM
-			#pragma target 3.0
+			#pragma target 3.0  
 
 			// -------------------------------------
 
@@ -84,7 +87,7 @@ Shader "Standard (Specular setup)"
 
 			#pragma vertex vertBase
 			#pragma fragment fragBase
-			#include "UnityStandardCoreForward.cginc"
+			#include "../CGIncludes/UnityStandardCoreForward.cginc"
 
 			ENDCG
 		}
@@ -323,5 +326,5 @@ Shader "Standard (Specular setup)"
 	}
 
 	FallBack "VertexLit"
-	CustomEditor "StandardShaderGUI"
+	CustomEditor "StandardShaderGUI1"
 }

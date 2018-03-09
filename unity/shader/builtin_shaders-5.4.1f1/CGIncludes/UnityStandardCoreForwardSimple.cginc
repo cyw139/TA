@@ -208,7 +208,8 @@ half4 fragForwardBaseSimpleInternal (VertexOutputBaseSimple i)
 	half3 c = BRDF3_Indirect(s.diffColor, s.specColor, gi.indirect, PerVertexGrazingTerm(i, s), PerVertexFresnelTerm(i));
 	c += BRDF3DirectSimple(s.diffColor, s.specColor, s.oneMinusRoughness, rl) * attenuatedLightColor;
 	c += UNITY_BRDF_GI (s.diffColor, s.specColor, s.oneMinusReflectivity, s.oneMinusRoughness, s.normalWorld, -s.eyeVec, occlusion, gi);
-	c += Emission(i.tex.xy);
+	fixed3 viewDir = normalize(_WorldSpaceCameraPos.xyz - s.posWorld.xyz);
+    c += Emission(i.tex.xy) * Emission_rim(viewDir, s.normalWorld);
 
 	UNITY_APPLY_FOG(i.fogCoord, c);
 	
